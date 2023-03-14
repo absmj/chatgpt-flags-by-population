@@ -25,7 +25,19 @@
         .progress-bar__flag {
             width: 30px;
             height: 20px;
+            opacity: 0;
+            animation: opa .56s ease-in 1;
             /* object-fit: contain; */
+        }
+        
+        @keyframe opa {
+            from {
+                opacity: 0;
+            }
+            
+            to {
+                opacity: 1;
+            }
         }
     </style>
 </head>
@@ -33,8 +45,8 @@
 <body>
     <div id="app">
         <div class="progress-bar">
-            <div v-for="country in iteratedCountry" class="progress-bar__item">
-                <div class="progress-bar__box">
+            <div v-for="(country, i) in iteratedCountry" :key="i" class="progress-bar__item">
+                <div :style="{'animation-delay': i + 's'}" class="progress-bar__box">
                     <img v-if="numBoxes(country) > 0" :src="country.flag" alt="Country Flag" class="progress-bar__flag">
                 </div>
             </div>
