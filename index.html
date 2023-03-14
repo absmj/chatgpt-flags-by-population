@@ -46,8 +46,8 @@
     <div id="app">
         <div class="progress-bar">
             <div v-for="(country, i) in iteratedCountry" :key="i" class="progress-bar__item">
-                <div :style="{'animation-delay': i + 's'}" class="progress-bar__box">
-                    <img v-if="numBoxes(country) > 0" :src="country.flag" alt="Country Flag" class="progress-bar__flag">
+                <div class="progress-bar__box">
+                    <img v-if="numBoxes(country) > 0" :src="country.flag" alt="Country Flag" class="progress-bar__flag" :style="{'animation-delay': i + 's'}">
                 </div>
             </div>
         </div>
