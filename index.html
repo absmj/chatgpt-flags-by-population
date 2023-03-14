@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Slideshow to Video</title>
+    <style>
+        .progress-bar {
+            display: flex;
+            flex-wrap: wrap;
+            /* align-items: center; */
+        }
+
+        .progress-bar__item {
+            display: flex;
+            flex-wrap: wrap;
+            margin-right: 5px;
+            margin-bottom: 5px;
+        }
+
+        .progress-bar__box {
+            padding-right: 5px;
+        }
+
+        .progress-bar__flag {
+            width: 30px;
+            height: 20px;
+            /* object-fit: contain; */
+        }
+    </style>
+</head>
+
+<body>
+    <div id="app">
+        <div class="progress-bar">
+            <div v-for="country in iteratedCountry" class="progress-bar__item">
+                <div class="progress-bar__box">
+                    <img v-if="numBoxes(country) > 0" :src="country.flag" alt="Country Flag" class="progress-bar__flag">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script>
+        new Vue({
+            el: "#app",
+            data: {
+                countries: [],
+                maxPopulation: 0,
+                iteratedCountry: []
+            },
+
+            methods: {
+                numBoxes(country) {
+                    return Math.max(Math.ceil((country.population / this.maxPopulation) * 10000), 0);
+                }
+            },
+
+            async mounted() {
+                await axios
+                    .get("https://restcountries.com/v2/all")
+                    .then(response => {
+                        this.countries = response.data.map(country => {
+                            return {
+                                name: country.name,
+                                population: country.population,
+                                flag: country.flags.svg
+                            }
+                        }).sort((a, b) => b.population - a.population);
+
+                        this.maxPopulation = Math.max(...this.countries.map(country => country.population));
+
+                        this.countries.forEach(country => {
+                            let i = 0;
+                            while(i < this.numBoxes(country)) {                                
+                                this.iteratedCountry.push(country);
+                                i++;
+                            }
+                        });
+                    })
+                    .catch(error => {
+                        console.log(error);
+                    });
+            }
+        });
+
+    </script>
+</body>
+
+</html>
